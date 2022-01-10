@@ -2,53 +2,25 @@ const express = require('express');
 const app = express(); 
 const port = process.env.PORT || 5000;
 const admin = require("firebase-admin");
-const fileUpload = require('express-fileupload'); // used for file upload.
+const fileUpload = require('express-fileupload');  // used for file upload.......
 //for .env variable must have declare.
 require('dotenv').config()
+
 //middlewaire.......
 var cors = require("cors");
 app.use(cors());
 app.use(express.json());
-app.use(fileUpload()); // used for file upload.
+app.use(fileUpload()); // used for file upload .........
 
 const ObjectId = require('mongodb').ObjectId;
-const stripe = require('stripe')(process.env.STRIPE_SECRET) // payments
+const stripe = require('stripe')(process.env.STRIPE_SECRET);  // payments........
 
 
 
 //external 
 const { MongoClient } = require('mongodb');
 
-//doctors-portal-4cb0c.json
-// from firebase>  project settings > Service Accounts.
-const serviceAccount = require('./doctors-portal-4cb0c-firebase-adminsdk.json');
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
-
-async function verifyToken(req, res, next) {
-  console.log(req.headers.authorization);
-
-  if(req.headers?.authorization?.startsWith('Bearer ')){
-    const token = req.headers.authorization.split(' ')[1];
-    console.log(token);
-  try{
-    const decodedUser = await admin.auth().verifyIdToken(token);
-    console.log(decodedUser);
-    req.decodedEmail = decodedUser.email;
-  }
-  catch{
-
-  }
-
-  }
-  next();
-}
-
-
-// Doctors-portal
-// Pi8SBqYUVRBgOG1t
+           
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.u6fw9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -112,24 +84,24 @@ async function run () {
 
     
     // make as admin by email & role attribute...... 
-    app.put('/users/admin', verifyToken, async (req, res) => {
-      const user = req.body;
-      // console.log('decoded', req.decodedEmail);  
-      const requester = req.decodedEmail;
-      if(requester){
-         const reqesterAccount = await usersCollection.findOne({email: requester});
-         console.log(reqesterAccount);
-         if(reqesterAccount?.role === 'admin'){
-            const filter = {email: user.email};
-            const updateDoc = {$set: {role: 'admin'}};
-            const result = await usersCollection.updateOne(filter,   updateDoc); 
-            res.send(result);
-            console.log(result);
-         }
-      }else{
-        res.status(403).send({ message: 'You don not have access!'} )
-      }
-    })
+    // app.put('/users/admin', verifyToken, async (req, res) => {
+    //   const user = req.body;
+    //   // console.log('decoded', req.decodedEmail);  
+    //   const requester = req.decodedEmail;
+    //   if(requester){
+    //      const reqesterAccount = await usersCollection.findOne({email: requester});
+    //      console.log(reqesterAccount);
+    //      if(reqesterAccount?.role === 'admin'){
+    //         const filter = {email: user.email};
+    //         const updateDoc = {$set: {role: 'admin'}};
+    //         const result = await usersCollection.updateOne(filter,   updateDoc); 
+    //         res.send(result);
+    //         console.log(result);
+    //      }
+    //   }else{
+    //     res.status(403).send({ message: 'You don not have access!'} )
+    //   }
+    // })
 
 
   // add doctor information and Picture......................... 
