@@ -21,14 +21,16 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET);  // payments.......
 const { MongoClient } = require('mongodb');
 
            
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.u6fw9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xh4av.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 // ALl Works will happen happend.
 async function run () {
     try {
-    await client.connect();
+      await client.connect();
+      console.log(
+        "Server and Database connection succesfully!");
     const database = client.db("Doctors-portal");  
     const appointmentsCollection = database.collection("appoitment-info");
     const usersCollection = database.collection("users");
