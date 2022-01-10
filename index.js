@@ -30,7 +30,7 @@ async function run () {
     try {
       await client.connect();
       console.log(
-        "Server and Database connection succesfully!");
+        "Server and Database connection succesfully shamim samian rayhan!");
     const database = client.db("Doctors-portal");  
     const appointmentsCollection = database.collection("appoitment-info");
     const usersCollection = database.collection("users");
